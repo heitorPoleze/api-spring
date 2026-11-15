@@ -1,3 +1,10 @@
 spring:
   application:
     name: sistema-bibliotecario
+  config:
+    import: optional:file:.env[.properties]
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: ${API_BASE_PATH:/api}

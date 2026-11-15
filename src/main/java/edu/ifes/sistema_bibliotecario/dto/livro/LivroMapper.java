@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LivroMapper {
 
-    public Livro toEntity(LivroRequestDTO dto) {
+    public Livro toDomain(LivroRequestDTO dto) {
         Livro livro = new Livro(
                 dto.titulo(),
                 dto.autor(),

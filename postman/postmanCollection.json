@@ -1,0 +1,181 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "biblioteca-spring-api",
+    "description": "Collection da API do Sistema Bibliotecário (Spring Boot).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "leitores",
+      "item": [
+        {
+          "name": "Criar Leitor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    pm.collectionVariables.set(\"leitorId\", body.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ana Silva\",\n  \"email\": \"ana.silva@ifes.edu.br\",\n  \"tipoPessoa\": \"ALUNO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/leitores",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "leitores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Leitores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/leitores",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "leitores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Leitores por Tipo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/leitores?tipo=ALUNO",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "leitores"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "ALUNO",
+                  "description": "Filtra por TipoPessoa (ex: ALUNO, PROFESSOR, FUNCIONARIO)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Leitor por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/leitores/{{leitorId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "leitores",
+                "{{leitorId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Leitor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ana Clara Silva\",\n  \"email\": \"ana.silva@ifes.edu.br\",\n  \"tipoPessoa\": \"PROFESSOR\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/leitores/{{leitorId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "leitores",
+                "{{leitorId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remover Leitor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/leitores/{{leitorId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "leitores",
+                "{{leitorId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "leitorId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}

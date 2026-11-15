@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LeitorMapper {
-    public Leitor toEntity(LeitorRequestDTO dto){
+    public Leitor toDomain(LeitorRequestDTO dto){
         return new Leitor(
                 dto.nome(),
                 dto.email(),

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Component
 public class EmprestimoMapper {
 
-    public Emprestimo toEntity(
+    public Emprestimo toDomain(
             EmprestimoRequestDTO dto,
             LocalDate dataEmprestimo,
             LocalDate dataPrevistaDevolucao

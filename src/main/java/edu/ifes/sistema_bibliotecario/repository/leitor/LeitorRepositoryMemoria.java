@@ -1,6 +1,7 @@
 package edu.ifes.sistema_bibliotecario.repository.leitor;
 
 import edu.ifes.sistema_bibliotecario.domain.Leitor;
+import edu.ifes.sistema_bibliotecario.domain.TipoPessoa;
 import edu.ifes.sistema_bibliotecario.exception.NaoEncontradoException;
 import org.springframework.stereotype.Repository;
 
@@ -20,10 +21,19 @@ public class LeitorRepositoryMemoria implements LeitorRepository{
         this.banco.add(leitor);
         return leitor;
     }
+
     @Override
     public List<Leitor> findAll(){
         return List.copyOf(this.banco);
     }
+
+    @Override
+    public List<Leitor> findByTipo(TipoPessoa tipo){
+        return this.banco.stream()
+                .filter(leitor -> leitor.getTipoPessoa() == tipo)
+                .toList();
+    }
+
     @Override
     public Optional<Leitor> findById(long id){
         return this.banco.stream()
