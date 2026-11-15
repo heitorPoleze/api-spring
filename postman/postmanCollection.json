@@ -164,6 +164,170 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "livros",
+      "item": [
+        {
+          "name": "Criar Livro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    pm.collectionVariables.set(\"livroId\", body.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Dom Casmurro\",\n  \"autor\": \"Machado de Assis\",\n  \"isbn\": \"9788535914849\",\n  \"anoPublicacao\": 1899,\n  \"quantidadeTotal\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/livros",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "livros"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Livros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/livros",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "livros"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Livros por Filtros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/livros?autor=Machado&disponivel=true",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "livros"
+              ],
+              "query": [
+                {
+                  "key": "autor",
+                  "value": "Machado",
+                  "description": "Filtro opcional por trecho do nome do autor (case-insensitive)"
+                },
+                {
+                  "key": "disponivel",
+                  "value": "true",
+                  "description": "Filtro opcional por disponibilidade (true ou false)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Livro por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/livros/{{livroId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "livros",
+                "{{livroId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Livro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Dom Casmurro (Edição Revisada)\",\n  \"autor\": \"Machado de Assis\",\n  \"isbn\": \"9788535914849\",\n  \"anoPublicacao\": 1899,\n  \"quantidadeTotal\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/livros/{{livroId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "livros",
+                "{{livroId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remover Livro",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/livros/{{livroId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "livros",
+                "{{livroId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
@@ -174,6 +338,11 @@
     },
     {
       "key": "leitorId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "livroId",
       "value": "1",
       "type": "string"
     }

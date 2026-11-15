@@ -1,31 +1,33 @@
 package edu.ifes.sistema_bibliotecario.domain;
 
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Livro {
+
     private long id;
 
-    @NonNull
     private String titulo;
 
-    @NonNull
     private String autor;
 
-    @NonNull
     private String isbn;
 
-    @NonNull
     private Integer anoPublicacao;
 
-    @NonNull
     private Integer quantidadeTotal;
 
     private Integer quantidadeDisponivel;
+
+    public boolean isDisponivel() {
+        return this.quantidadeDisponivel != null && this.quantidadeDisponivel > 0;
+    }
 }

@@ -1,12 +1,7 @@
 package edu.ifes.sistema_bibliotecario.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.AccessLevel;
-import lombok.NonNull;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,15 +10,12 @@ import java.time.LocalDate;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Emprestimo {
     private Long id;
 
-    @NonNull
-    @Setter(AccessLevel.NONE)
     private Long livroId;
 
-    @NonNull
-    @Setter(AccessLevel.NONE)
     private Long leitorId;
 
     private LocalDate dataEmprestimo;

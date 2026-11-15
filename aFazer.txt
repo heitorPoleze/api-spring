@@ -1,7 +1,15 @@
--> Inserção regras de negócio em application.yml
--> Criação da Repository com Interface e implementacao [Dominio]RepositoryEmMemoria, usando nomenclatura spring data
--> Services com Strategy
--> Controller com uma rota de prefixo padrão
--> Carga Inicial dos Dados
+-> Empréstimo
+    -> Inserção regras de negócio em application.yml
+    -> Services com Strategy
+
+-> Leitor
+    -> deleção verificar se há empréstimos ativos
+
+-> Livros
+    -> filtro
+    -> deleção verificar se há empréstimos ativos
+    -> put verificar se qtdTotal alterada é < qtdDisponivel
+
 -> Collection no Postman
 -> Readme
+-> Carga Inicial dos Dados

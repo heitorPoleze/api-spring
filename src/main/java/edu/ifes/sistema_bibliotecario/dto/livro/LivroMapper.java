@@ -7,15 +7,13 @@ import org.springframework.stereotype.Component;
 public class LivroMapper {
 
     public Livro toDomain(LivroRequestDTO dto) {
-        Livro livro = new Livro(
-                dto.titulo(),
-                dto.autor(),
-                dto.isbn(),
-                dto.anoPublicacao(),
-                dto.quantidadeTotal()
-        );
-        livro.setQuantidadeDisponivel(dto.quantidadeTotal());
-        return livro;
+        return Livro.builder()
+                .titulo(dto.titulo())
+                .autor(dto.autor())
+                .isbn(dto.isbn())
+                .anoPublicacao(dto.anoPublicacao())
+                .quantidadeTotal(dto.quantidadeTotal())
+                .build();
     }
 
     public LivroResponseDTO toResponse(Livro livro) {
