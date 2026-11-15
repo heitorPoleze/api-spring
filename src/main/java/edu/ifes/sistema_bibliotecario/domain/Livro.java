@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 @Setter
 @RequiredArgsConstructor
 public class Livro {
-    @Setter(AccessLevel.NONE)
     private long id;
 
     @NonNull

@@ -16,7 +16,6 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class Emprestimo {
-    @Setter(AccessLevel.NONE)
     private Long id;
 
     @NonNull

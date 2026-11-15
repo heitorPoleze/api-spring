@@ -11,7 +11,6 @@ import lombok.NonNull;
 @RequiredArgsConstructor
 public class Leitor {
 
-    @Setter(AccessLevel.NONE)
     private long id;
 
     @NonNull
