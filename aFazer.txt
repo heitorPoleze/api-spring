@@ -1,0 +1,7 @@
+-> Inserção regras de negócio em application.yml
+-> Criação da Repository com Interface e implementacao [Dominio]RepositoryEmMemoria, usando nomenclatura spring data
+-> Services com Strategy
+-> Controller com uma rota de prefixo padrão
+-> Carga Inicial dos Dados
+-> Collection no Postman
+-> Readme
