@@ -1,15 +1,8 @@
 -> Empréstimo
-    -> Inserção regras de negócio em application.yml
     -> Services com Strategy
-
--> Leitor
-    -> deleção verificar se há empréstimos ativos
-
--> Livros
-    -> filtro
-    -> deleção verificar se há empréstimos ativos
-    -> put verificar se qtdTotal alterada é < qtdDisponivel
+    -> Filtro
+-> Carga Inicial dos Dados
 
 -> Collection no Postman
+
 -> Readme
--> Carga Inicial dos Dados

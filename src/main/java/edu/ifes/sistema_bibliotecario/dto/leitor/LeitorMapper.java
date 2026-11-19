@@ -5,12 +5,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LeitorMapper {
-    public Leitor toDomain(LeitorRequestDTO dto){
-        return new Leitor(
-                dto.nome(),
-                dto.email(),
-                dto.tipoPessoa()
-        );
+    public Leitor fromRequest(LeitorRequestDTO dto) {
+        return Leitor.builder()
+                .nome(dto.nome())
+                .email(dto.email())
+                .tipoPessoa(dto.tipoPessoa())
+                .build();
     }
 
     public LeitorResponseDTO toResponse(Leitor leitor) {
@@ -19,6 +19,13 @@ public class LeitorMapper {
                 leitor.getNome(),
                 leitor.getEmail(),
                 leitor.getTipoPessoa()
+        );
+    }
+
+    public LeitorResumoDTO toResumo(Leitor leitor){
+        return new LeitorResumoDTO(
+                leitor.getId(),
+                leitor.getNome()
         );
     }
 }

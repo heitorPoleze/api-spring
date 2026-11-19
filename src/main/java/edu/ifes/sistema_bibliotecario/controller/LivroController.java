@@ -1,6 +1,8 @@
 package edu.ifes.sistema_bibliotecario.controller;
 
+import edu.ifes.sistema_bibliotecario.domain.Livro;
 import edu.ifes.sistema_bibliotecario.dto.livro.LivroFiltrosDTO;
+import edu.ifes.sistema_bibliotecario.dto.livro.LivroMapper;
 import edu.ifes.sistema_bibliotecario.dto.livro.LivroRequestDTO;
 import edu.ifes.sistema_bibliotecario.dto.livro.LivroResponseDTO;
 import edu.ifes.sistema_bibliotecario.service.LivroService;
@@ -19,38 +21,41 @@ import java.util.List;
 public class LivroController {
 
     private final LivroService livroService;
+    private final LivroMapper livroMapper;
 
     @PostMapping
     public ResponseEntity<LivroResponseDTO> save(@RequestBody @Valid LivroRequestDTO dto) {
-        LivroResponseDTO livroSalvo = this.livroService.save(dto);
+        Livro livroSalvo = this.livroService.save(dto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(livroSalvo.id())
+                .buildAndExpand(livroSalvo.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(livroSalvo);
+        return ResponseEntity.created(location).body(this.livroMapper.toResponse(livroSalvo));
     }
 
     @GetMapping
     public ResponseEntity<List<LivroResponseDTO>> findByFilters(LivroFiltrosDTO filtros) {
-        List<LivroResponseDTO> livros = this.livroService.findByFilters(filtros);
+        List<LivroResponseDTO> livros = this.livroService.findByFilters(filtros).stream()
+                .map(this.livroMapper::toResponse)
+                .toList();
         return ResponseEntity.ok(livros);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<LivroResponseDTO> findById(@PathVariable long id) {
-        LivroResponseDTO livro = this.livroService.findById(id);
-        return ResponseEntity.ok(livro);
+        Livro livro = this.livroService.findById(id);
+        return ResponseEntity.ok(this.livroMapper.toResponse(livro));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<LivroResponseDTO> update(
             @PathVariable long id,
             @RequestBody @Valid LivroRequestDTO dto) {
-        LivroResponseDTO livroAtualizado = this.livroService.update(id, dto);
-        return ResponseEntity.ok(livroAtualizado);
+        Livro livroAtualizado = this.livroService.update(id, dto);
+        return ResponseEntity.ok(this.livroMapper.toResponse(livroAtualizado));
     }
 
     @DeleteMapping("/{id}")

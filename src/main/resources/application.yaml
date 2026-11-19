@@ -8,3 +8,15 @@ server:
   port: ${SERVER_PORT:8080}
   servlet:
     context-path: ${API_BASE_PATH:/api}
+
+biblioteca:
+  emprestimo:
+    regras:
+      ALUNO:
+        limite-ativos: 3
+        prazo-dias: 7
+        multa-diaria: 1.00
+      PROFESSOR:
+        limite-ativos: 5
+        prazo-dias: 14
+        multa-diaria: 0.50

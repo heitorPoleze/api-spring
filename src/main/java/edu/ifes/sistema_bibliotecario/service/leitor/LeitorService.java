@@ -1,13 +1,13 @@
-package edu.ifes.sistema_bibliotecario.service;
+package edu.ifes.sistema_bibliotecario.service.leitor;
 
 import edu.ifes.sistema_bibliotecario.domain.Leitor;
 import edu.ifes.sistema_bibliotecario.domain.TipoPessoa;
 import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorMapper;
 import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorRequestDTO;
-import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorResponseDTO;
 import edu.ifes.sistema_bibliotecario.exception.NaoEncontradoException;
 import edu.ifes.sistema_bibliotecario.exception.RegraDeNegocioVioladaException;
 import edu.ifes.sistema_bibliotecario.repository.leitor.LeitorRepository;
+import edu.ifes.sistema_bibliotecario.service.emprestimo.EmprestimoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,34 +18,29 @@ import java.util.List;
 public class LeitorService {
     private final LeitorRepository leitorRepository;
     private final LeitorMapper leitorMapper;
+    private final EmprestimoService emprestimoService;
 
-    public LeitorResponseDTO save(LeitorRequestDTO dto) {
+    public Leitor save(LeitorRequestDTO dto) {
         this.leitorRepository.findByEmail(dto.email())
                 .ifPresent(leitorExistente -> {
                     throw new RegraDeNegocioVioladaException("Leitor não pode ser cadastrado.");
                 });
 
-        Leitor leitorSalvo = this.leitorRepository.save(this.leitorMapper.toDomain(dto));
-        return this.leitorMapper.toResponse(leitorSalvo);
+        return this.leitorRepository.save(this.leitorMapper.fromRequest(dto));
     }
 
-    public List<LeitorResponseDTO> findAll(TipoPessoa tipo) {
-        List<Leitor> leitores = (tipo != null)
+    public List<Leitor> findAll(TipoPessoa tipo) {
+        return (tipo != null)
                 ? this.leitorRepository.findByTipo(tipo)
                 : this.leitorRepository.findAll();
-
-        return leitores.stream()
-                .map(this.leitorMapper::toResponse)
-                .toList();
     }
 
-    public LeitorResponseDTO findById(long id) {
-        Leitor leitor = this.leitorRepository.findById(id)
+    public Leitor findById(long id) {
+        return this.leitorRepository.findById(id)
                 .orElseThrow(() -> new NaoEncontradoException("Leitor não encontrado."));
-        return this.leitorMapper.toResponse(leitor);
     }
 
-    public LeitorResponseDTO update(long id, LeitorRequestDTO dto){
+    public Leitor update(long id, LeitorRequestDTO dto){
         this.leitorRepository.findById(id)
                 .orElseThrow(() -> new NaoEncontradoException("Leitor não encontrado."));
 
@@ -55,16 +50,15 @@ public class LeitorService {
                     throw new RegraDeNegocioVioladaException("E-mail já cadastrado.");
                 });
 
-        Leitor leitorComId = this.leitorMapper.toDomain(dto);
+        Leitor leitorComId = this.leitorMapper.fromRequest(dto);
         leitorComId.setId(id);
 
-        Leitor leitorAtualizado = this.leitorRepository.update(leitorComId)
+        return this.leitorRepository.update(leitorComId)
                 .orElseThrow(() -> new NaoEncontradoException("Leitor não encontrado."));
-
-        return this.leitorMapper.toResponse(leitorAtualizado);
     }
 
     public void deleteById(long id){
+        if(this.emprestimoService.isLeitorComEmprestimoAtivo(id)) throw new RegraDeNegocioVioladaException("Leitor não pode ser excluído pois está com empréstimos ativos.");
         boolean deletado = this.leitorRepository.deleteById(id);
         if(!deletado){
             throw new NaoEncontradoException("Leitor não encontrado");

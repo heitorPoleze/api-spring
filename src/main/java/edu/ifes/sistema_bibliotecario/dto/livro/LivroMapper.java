@@ -27,4 +27,11 @@ public class LivroMapper {
                 livro.getQuantidadeDisponivel()
         );
     }
+
+    public LivroResumoDTO toResumo(Livro livro){
+        return new LivroResumoDTO(
+                livro.getId(),
+                livro.getTitulo()
+        );
+    }
 }

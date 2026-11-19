@@ -1,14 +1,15 @@
 package edu.ifes.sistema_bibliotecario.dto.emprestimo;
 
+import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorResumoDTO;
+import edu.ifes.sistema_bibliotecario.dto.livro.LivroResumoDTO;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record EmprestimoResponseDTO(
         Long id,
-        Long livroId,
-        String tituloLivro,
-        Long leitorId,
-        String nomeLeitor,
+        LivroResumoDTO livro,
+        LeitorResumoDTO leitor,
         LocalDate dataEmprestimo,
         LocalDate dataPrevistaDevolucao,
         LocalDate dataDevolucao,

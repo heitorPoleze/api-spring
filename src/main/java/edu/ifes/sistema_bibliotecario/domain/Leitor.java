@@ -1,24 +1,32 @@
 package edu.ifes.sistema_bibliotecario.domain;
 
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.NonNull;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Leitor {
 
     private long id;
 
-    @NonNull
     private String nome;
 
-    @NonNull
     private String email;
 
-    @NonNull
     private TipoPessoa tipoPessoa;
+
+    private int limiteAtivos;
+
+    private int prazoParaRetorno;
+
+    private BigDecimal valorMultaDiario;
 }

@@ -26,9 +26,13 @@ public class Emprestimo {
 
     private BigDecimal multa;
 
-    public static EmprestimoBuilder builder(@NonNull Long livroId, @NonNull Long leitorId) {
-        return new EmprestimoBuilder()
-                .livroId(livroId)
-                .leitorId(leitorId);
+    public boolean isAtivo() {
+        return this.dataDevolucao == null;
+    }
+
+    public boolean isAtrasado(LocalDate dataReferencia) {
+        return this.isAtivo()
+                && this.dataPrevistaDevolucao != null
+                && dataReferencia.isAfter(this.dataPrevistaDevolucao);
     }
 }
