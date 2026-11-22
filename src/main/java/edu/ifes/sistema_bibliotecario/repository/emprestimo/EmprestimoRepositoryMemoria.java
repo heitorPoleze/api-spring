@@ -24,7 +24,7 @@ public class EmprestimoRepositoryMemoria implements  EmprestimoRepository {
     @Override
     public List<Emprestimo> findAll(Especificacao<Emprestimo> spec){
         return this.banco.stream()
-                .filter(spec::atende)
+                .filter(emprestimo -> spec.atende(emprestimo))
                 .toList();
     }
 

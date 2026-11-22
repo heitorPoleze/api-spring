@@ -11,7 +11,8 @@ import edu.ifes.sistema_bibliotecario.exception.NaoEncontradoException;
 import edu.ifes.sistema_bibliotecario.exception.RegraDeNegocioVioladaException;
 import edu.ifes.sistema_bibliotecario.repository.emprestimo.EmprestimoRepository;
 import edu.ifes.sistema_bibliotecario.service.LivroService;
-import edu.ifes.sistema_bibliotecario.service.leitor.LeitorFactory;
+import edu.ifes.sistema_bibliotecario.service.emprestimo.strategy.RegraEmprestimoResolver;
+import edu.ifes.sistema_bibliotecario.service.emprestimo.strategy.RegraEmprestimoStrategy;
 import edu.ifes.sistema_bibliotecario.service.leitor.LeitorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -29,12 +29,12 @@ public class EmprestimoService {
     private final EmprestimoMapper emprestimoMapper;
     private final LivroService livroService;
     private final LeitorService leitorService;
-    private final LeitorFactory leitorFactory;
+    private final RegraEmprestimoResolver regraEmprestimoResolver;
     private final Clock clock;
 
     public EmprestimoResponseDTO save(EmprestimoRequestDTO dto){
         Leitor leitor = this.leitorService.findById(dto.leitorId());
-        leitor = leitorFactory.leitorComValoresDeRegraEmprestimo(leitor);
+        RegraEmprestimoStrategy regra = this.regraEmprestimoResolver.para(leitor.getTipoPessoa());
 
         LocalDate hoje = getDataDeHoje();
         List<Emprestimo> listaEmprestimosAtrasadosLeitor = emprestimoRepository.findAtrasadosByLeitorId(leitor.getId(), hoje);
@@ -42,8 +42,8 @@ public class EmprestimoService {
             throw new RegraDeNegocioVioladaException("Leitor não pode ter mais um empréstimo, pois tem livros atrasados.");
         }
         List<Emprestimo> listaAtivosLeitor = emprestimoRepository.findAtivosByLeitorId(leitor.getId());
-        if(listaAtivosLeitor.size() >= leitor.getLimiteAtivos()){
-            throw new RegraDeNegocioVioladaException("Leitor já ultrapassou o limite de empréstimos ativos (" + leitor.getLimiteAtivos() + ").");
+        if(listaAtivosLeitor.size() >= regra.limiteAtivos()){
+            throw new RegraDeNegocioVioladaException("Leitor já ultrapassou o limite de empréstimos ativos (" + regra.limiteAtivos() + ").");
         }
 
         Livro livro = livroService.findById(dto.livroId());
@@ -53,7 +53,7 @@ public class EmprestimoService {
 
         Emprestimo emprestimo = emprestimoMapper.toDomain(dto);
         emprestimo.setDataEmprestimo(hoje);
-        emprestimo.setDataPrevistaDevolucao(hoje.plusDays(leitor.getPrazoParaRetorno()));
+        emprestimo.setDataPrevistaDevolucao(regra.calcularDataPrevistaDevolucao(hoje));
 
         this.livroService.diminuirQtdDisponivel(livro);
         Emprestimo emprestimoSalvo = this.emprestimoRepository.save(emprestimo);
@@ -92,7 +92,9 @@ public class EmprestimoService {
         emprestimo.setDataDevolucao(hoje);
 
         if(emprestimo.isAtrasado(hoje)){
-            BigDecimal valorMulta = this.calcularValorMulta(emprestimo.getDataPrevistaDevolucao(), hoje, leitorQueEmprestou.getValorMultaDiario());
+            BigDecimal valorMulta = this.regraEmprestimoResolver
+                    .para(leitorQueEmprestou.getTipoPessoa())
+                    .calcularMulta(emprestimo.getDataPrevistaDevolucao(), hoje);
             emprestimo.setMulta(valorMulta);
         }
         Livro livro = this.livroService.findById(emprestimo.getLivroId());
@@ -106,11 +108,6 @@ public class EmprestimoService {
 
     public boolean isLeitorComEmprestimoAtivo(long idLeitor){
         return !this.emprestimoRepository.findAtivosByLeitorId(idLeitor).isEmpty();
-    }
-
-    private BigDecimal calcularValorMulta(LocalDate dataPrevista, LocalDate dataDevolucao, BigDecimal valorMultaDiario) {
-        long diasAtraso = ChronoUnit.DAYS.between(dataPrevista, dataDevolucao);
-        return valorMultaDiario.multiply(BigDecimal.valueOf(diasAtraso));
     }
 
     private LocalDate getDataDeHoje(){
