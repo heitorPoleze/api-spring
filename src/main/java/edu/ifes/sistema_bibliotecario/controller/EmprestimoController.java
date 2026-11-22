@@ -1,5 +1,6 @@
 package edu.ifes.sistema_bibliotecario.controller;
 
+import edu.ifes.sistema_bibliotecario.dto.emprestimo.EmprestimoFiltrosDTO;
 import edu.ifes.sistema_bibliotecario.dto.emprestimo.EmprestimoRequestDTO;
 import edu.ifes.sistema_bibliotecario.dto.emprestimo.EmprestimoResponseDTO;
 import edu.ifes.sistema_bibliotecario.service.emprestimo.EmprestimoService;
@@ -32,7 +33,9 @@ public class EmprestimoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EmprestimoResponseDTO>> listarPorFiltro(){}
+    public ResponseEntity<List<EmprestimoResponseDTO>> findByFiltros(EmprestimoFiltrosDTO filtros){
+        return ResponseEntity.ok(this.emprestimoService.findByFiltros(filtros));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<EmprestimoResponseDTO> findById(@PathVariable long id){

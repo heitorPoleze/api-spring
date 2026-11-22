@@ -1,7 +1,7 @@
 package edu.ifes.sistema_bibliotecario.service.leitor;
 
 import edu.ifes.sistema_bibliotecario.domain.Leitor;
-import edu.ifes.sistema_bibliotecario.domain.TipoPessoa;
+import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorFiltrosDTO;
 import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorMapper;
 import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorRequestDTO;
 import edu.ifes.sistema_bibliotecario.exception.NaoEncontradoException;
@@ -29,10 +29,8 @@ public class LeitorService {
         return this.leitorRepository.save(this.leitorMapper.fromRequest(dto));
     }
 
-    public List<Leitor> findAll(TipoPessoa tipo) {
-        return (tipo != null)
-                ? this.leitorRepository.findByTipo(tipo)
-                : this.leitorRepository.findAll();
+    public List<Leitor> findByFiltros(LeitorFiltrosDTO filtros) {
+        return this.leitorRepository.findAll(filtros.toEspecificacao());
     }
 
     public Leitor findById(long id) {

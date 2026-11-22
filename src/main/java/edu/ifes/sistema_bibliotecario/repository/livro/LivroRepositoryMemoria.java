@@ -1,7 +1,7 @@
 package edu.ifes.sistema_bibliotecario.repository.livro;
 
 import edu.ifes.sistema_bibliotecario.domain.Livro;
-import edu.ifes.sistema_bibliotecario.dto.livro.LivroFiltrosDTO;
+import edu.ifes.sistema_bibliotecario.domain.especificacao.Especificacao;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -21,8 +21,9 @@ public class LivroRepositoryMemoria implements LivroRepository {
     }
 
     @Override
-    public List<Livro> findByFiltro(LivroFiltrosDTO filtros){
+    public List<Livro> findAll(Especificacao<Livro> spec){
         return this.banco.stream()
+                .filter(spec::atende)
                 .toList();
     }
 

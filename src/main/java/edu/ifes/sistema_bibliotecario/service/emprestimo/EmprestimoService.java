@@ -3,6 +3,7 @@ package edu.ifes.sistema_bibliotecario.service.emprestimo;
 import edu.ifes.sistema_bibliotecario.domain.Emprestimo;
 import edu.ifes.sistema_bibliotecario.domain.Leitor;
 import edu.ifes.sistema_bibliotecario.domain.Livro;
+import edu.ifes.sistema_bibliotecario.dto.emprestimo.EmprestimoFiltrosDTO;
 import edu.ifes.sistema_bibliotecario.dto.emprestimo.EmprestimoMapper;
 import edu.ifes.sistema_bibliotecario.dto.emprestimo.EmprestimoRequestDTO;
 import edu.ifes.sistema_bibliotecario.dto.emprestimo.EmprestimoResponseDTO;
@@ -60,12 +61,16 @@ public class EmprestimoService {
         return emprestimoMapper.toResponse(emprestimoSalvo, livro, leitor);
     }
 
-    public List<EmprestimoResponseDTO> listarTodosPorFiltro(){}
+    public List<EmprestimoResponseDTO> findByFiltros(EmprestimoFiltrosDTO filtros){
+        return this.emprestimoRepository.findAll(filtros.toEspecificacao()).stream()
+                .map(emprestimo -> mapLivroELeitorPorEmprestimo(emprestimo, null, null))
+                .toList();
+    }
 
     public EmprestimoResponseDTO buscarPorId(long id){
         Emprestimo emprestimo = this.emprestimoRepository.findById(id)
-                .orElseThrow(()-> new NaoEncontradoException("Livro não encontrado."));
-        return this.mapLivroELeitorPorEmprestimo(emprestimo);
+                .orElseThrow(()-> new NaoEncontradoException("Empréstimo não encontrado."));
+        return this.mapLivroELeitorPorEmprestimo(emprestimo, null, null);
     }
 
     public List<EmprestimoResponseDTO> buscarAtrasados(){
@@ -90,7 +95,8 @@ public class EmprestimoService {
             BigDecimal valorMulta = this.calcularValorMulta(emprestimo.getDataPrevistaDevolucao(), hoje, leitorQueEmprestou.getValorMultaDiario());
             emprestimo.setMulta(valorMulta);
         }
-
+        Livro livro = this.livroService.findById(emprestimo.getLivroId());
+        this.livroService.aumentarQtdDisponivel(livro);
         return mapLivroELeitorPorEmprestimo(emprestimo, null, leitorQueEmprestou);
     }
 

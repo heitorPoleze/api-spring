@@ -1,10 +1,9 @@
 package edu.ifes.sistema_bibliotecario.repository.emprestimo;
 
-import edu.ifes.sistema_bibliotecario.config.clock.ClockConfig;
 import edu.ifes.sistema_bibliotecario.domain.Emprestimo;
+import edu.ifes.sistema_bibliotecario.domain.especificacao.Especificacao;
 import org.springframework.stereotype.Repository;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,13 @@ public class EmprestimoRepositoryMemoria implements  EmprestimoRepository {
         emprestimo.setId(this.incrementarId());
         this.banco.add(emprestimo);
         return emprestimo;
+    }
+
+    @Override
+    public List<Emprestimo> findAll(Especificacao<Emprestimo> spec){
+        return this.banco.stream()
+                .filter(spec::atende)
+                .toList();
     }
 
     @Override

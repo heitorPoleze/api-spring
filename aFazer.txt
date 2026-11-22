@@ -1,8 +1,9 @@
--> Empréstimo
-    -> Services com Strategy
-    -> Filtro
+-> Services Empréstimo com Strategy
+
+-> Padronização dos Filtros de Busca2
+
 -> Carga Inicial dos Dados
 
--> Collection no Postman
-
 -> Readme
+
+-> Collection no Postman

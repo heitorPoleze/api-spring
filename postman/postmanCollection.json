@@ -11,20 +11,6 @@
       "item": [
         {
           "name": "Criar Leitor",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const body = pm.response.json();",
-                  "    pm.collectionVariables.set(\"leitorId\", body.id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -33,6 +19,15 @@
                 "value": "application/json"
               }
             ],
+            "url": {
+              "raw": "{{url}}/leitores",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "leitores"
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Ana Silva\",\n  \"email\": \"ana.silva@ifes.edu.br\",\n  \"tipoPessoa\": \"ALUNO\"\n}",
@@ -41,59 +36,81 @@
                   "language": "json"
                 }
               }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "filtros",
+          "item": [
+            {
+              "name": "Sem filtros",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/leitores",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "leitores"
+                  ]
+                },
+                "description": "Nenhum parâmetro: retorna todos os leitores."
+              },
+              "response": []
             },
-            "url": {
-              "raw": "{{url}}/leitores",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "leitores"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Listar Leitores",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url}}/leitores",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "leitores"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Buscar Leitores por Tipo",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url}}/leitores?tipo=ALUNO",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "leitores"
-              ],
-              "query": [
-                {
-                  "key": "tipo",
-                  "value": "ALUNO",
-                  "description": "Filtra por TipoPessoa (ex: ALUNO, PROFESSOR, FUNCIONARIO)"
+            {
+              "name": "tipo=ALUNO",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/leitores?tipo=ALUNO",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "leitores"
+                  ],
+                  "query": [
+                    {
+                      "key": "tipo",
+                      "value": "ALUNO",
+                      "description": "Opcional. TipoPessoa: ALUNO ou PROFESSOR"
+                    }
+                  ]
                 }
-              ]
+              },
+              "response": []
+            },
+            {
+              "name": "tipo=PROFESSOR",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/leitores?tipo=PROFESSOR",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "leitores"
+                  ],
+                  "query": [
+                    {
+                      "key": "tipo",
+                      "value": "PROFESSOR",
+                      "description": "Opcional. TipoPessoa: ALUNO ou PROFESSOR"
+                    }
+                  ]
+                }
+              },
+              "response": []
             }
-          },
-          "response": []
+          ],
+          "description": "GET /leitores?tipo= — todos os parâmetros são opcionais."
         },
         {
           "name": "Buscar Leitor por ID",
@@ -101,13 +118,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/leitores/{{leitorId}}",
+              "raw": "{{url}}/leitores/1",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "leitores",
-                "{{leitorId}}"
+                "1"
               ]
             }
           },
@@ -123,6 +140,16 @@
                 "value": "application/json"
               }
             ],
+            "url": {
+              "raw": "{{url}}/leitores/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "leitores",
+                "1"
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Ana Clara Silva\",\n  \"email\": \"ana.silva@ifes.edu.br\",\n  \"tipoPessoa\": \"PROFESSOR\"\n}",
@@ -131,16 +158,6 @@
                   "language": "json"
                 }
               }
-            },
-            "url": {
-              "raw": "{{url}}/leitores/{{leitorId}}",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "leitores",
-                "{{leitorId}}"
-              ]
             }
           },
           "response": []
@@ -151,13 +168,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{url}}/leitores/{{leitorId}}",
+              "raw": "{{url}}/leitores/1",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "leitores",
-                "{{leitorId}}"
+                "1"
               ]
             }
           },
@@ -170,20 +187,6 @@
       "item": [
         {
           "name": "Criar Livro",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const body = pm.response.json();",
-                  "    pm.collectionVariables.set(\"livroId\", body.id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -192,6 +195,15 @@
                 "value": "application/json"
               }
             ],
+            "url": {
+              "raw": "{{url}}/livros",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "livros"
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"titulo\": \"Dom Casmurro\",\n  \"autor\": \"Machado de Assis\",\n  \"isbn\": \"9788535914849\",\n  \"anoPublicacao\": 1899,\n  \"quantidadeTotal\": 5\n}",
@@ -200,64 +212,134 @@
                   "language": "json"
                 }
               }
-            },
-            "url": {
-              "raw": "{{url}}/livros",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "livros"
-              ]
             }
           },
           "response": []
         },
         {
-          "name": "Listar Livros",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url}}/livros",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "livros"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Buscar Livros por Filtros",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url}}/livros?autor=Machado&disponivel=true",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "livros"
-              ],
-              "query": [
-                {
-                  "key": "autor",
-                  "value": "Machado",
-                  "description": "Filtro opcional por trecho do nome do autor (case-insensitive)"
+          "name": "filtros",
+          "item": [
+            {
+              "name": "Sem filtros",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/livros",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "livros"
+                  ]
                 },
-                {
-                  "key": "disponivel",
-                  "value": "true",
-                  "description": "Filtro opcional por disponibilidade (true ou false)"
+                "description": "Nenhum parâmetro: retorna todos os livros, inclusive indisponíveis."
+              },
+              "response": []
+            },
+            {
+              "name": "autor=machado",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/livros?autor=machado",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "livros"
+                  ],
+                  "query": [
+                    {
+                      "key": "autor",
+                      "value": "machado",
+                      "description": "Opcional. Trecho do nome do autor, sem diferenciar maiúsculas"
+                    }
+                  ]
                 }
-              ]
+              },
+              "response": []
+            },
+            {
+              "name": "disponivel=true",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/livros?disponivel=true",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "livros"
+                  ],
+                  "query": [
+                    {
+                      "key": "disponivel",
+                      "value": "true",
+                      "description": "Opcional. true = com exemplares disponíveis; false = sem exemplares disponíveis"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "disponivel=false",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/livros?disponivel=false",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "livros"
+                  ],
+                  "query": [
+                    {
+                      "key": "disponivel",
+                      "value": "false",
+                      "description": "Opcional. true = com exemplares disponíveis; false = sem exemplares disponíveis"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "autor=machado & disponivel=true",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/livros?autor=machado&disponivel=true",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "livros"
+                  ],
+                  "query": [
+                    {
+                      "key": "autor",
+                      "value": "machado",
+                      "description": "Opcional. Trecho do nome do autor, sem diferenciar maiúsculas"
+                    },
+                    {
+                      "key": "disponivel",
+                      "value": "true",
+                      "description": "Opcional. true = com exemplares disponíveis; false = sem exemplares disponíveis"
+                    }
+                  ]
+                }
+              },
+              "response": []
             }
-          },
-          "response": []
+          ],
+          "description": "GET /livros?autor=&disponivel= — todos os parâmetros são opcionais e combináveis."
         },
         {
           "name": "Buscar Livro por ID",
@@ -265,13 +347,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/livros/{{livroId}}",
+              "raw": "{{url}}/livros/1",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "livros",
-                "{{livroId}}"
+                "1"
               ]
             }
           },
@@ -287,6 +369,16 @@
                 "value": "application/json"
               }
             ],
+            "url": {
+              "raw": "{{url}}/livros/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "livros",
+                "1"
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"titulo\": \"Dom Casmurro (Edição Revisada)\",\n  \"autor\": \"Machado de Assis\",\n  \"isbn\": \"9788535914849\",\n  \"anoPublicacao\": 1899,\n  \"quantidadeTotal\": 10\n}",
@@ -295,16 +387,6 @@
                   "language": "json"
                 }
               }
-            },
-            "url": {
-              "raw": "{{url}}/livros/{{livroId}}",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "livros",
-                "{{livroId}}"
-              ]
             }
           },
           "response": []
@@ -315,15 +397,234 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{url}}/livros/{{livroId}}",
+              "raw": "{{url}}/livros/1",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "livros",
-                "{{livroId}}"
+                "1"
               ]
             }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "emprestimos",
+      "item": [
+        {
+          "name": "Criar Empréstimo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/emprestimos",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "emprestimos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"livroId\": 1,\n  \"leitorId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requer leitor 1 e livro 1 cadastrados. A data do empréstimo e a data prevista de devolução são calculadas pela API."
+          },
+          "response": []
+        },
+        {
+          "name": "filtros",
+          "item": [
+            {
+              "name": "Sem filtros",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/emprestimos",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "emprestimos"
+                  ]
+                },
+                "description": "Nenhum parâmetro: retorna todos os empréstimos."
+              },
+              "response": []
+            },
+            {
+              "name": "leitorId=1",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/emprestimos?leitorId=1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "emprestimos"
+                  ],
+                  "query": [
+                    {
+                      "key": "leitorId",
+                      "value": "1",
+                      "description": "Opcional. ID do leitor"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ativos=true",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/emprestimos?ativos=true",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "emprestimos"
+                  ],
+                  "query": [
+                    {
+                      "key": "ativos",
+                      "value": "true",
+                      "description": "Opcional. true = não devolvidos; false = já devolvidos"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ativos=false",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/emprestimos?ativos=false",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "emprestimos"
+                  ],
+                  "query": [
+                    {
+                      "key": "ativos",
+                      "value": "false",
+                      "description": "Opcional. true = não devolvidos; false = já devolvidos"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "leitorId=1 & ativos=true",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/emprestimos?leitorId=1&ativos=true",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "emprestimos"
+                  ],
+                  "query": [
+                    {
+                      "key": "leitorId",
+                      "value": "1",
+                      "description": "Opcional. ID do leitor"
+                    },
+                    {
+                      "key": "ativos",
+                      "value": "true",
+                      "description": "Opcional. true = não devolvidos; false = já devolvidos"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "GET /emprestimos?leitorId=&ativos= — todos os parâmetros são opcionais e combináveis."
+        },
+        {
+          "name": "Buscar Empréstimo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/emprestimos/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "emprestimos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Devolver Empréstimo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/emprestimos/1/devolucao",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "emprestimos",
+                "1",
+                "devolucao"
+              ]
+            },
+            "description": "Registra a devolução com a data de hoje. Se estiver atrasado, calcula a multa."
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Atrasados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/emprestimos/atrasados",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "emprestimos",
+                "atrasados"
+              ]
+            },
+            "description": "Empréstimos ativos cuja data prevista de devolução já passou."
           },
           "response": []
         }
@@ -334,16 +635,6 @@
     {
       "key": "url",
       "value": "http://localhost:8080/api",
-      "type": "string"
-    },
-    {
-      "key": "leitorId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "livroId",
-      "value": "1",
       "type": "string"
     }
   ]

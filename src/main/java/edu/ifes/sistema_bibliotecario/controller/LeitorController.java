@@ -1,7 +1,7 @@
 package edu.ifes.sistema_bibliotecario.controller;
 
 import edu.ifes.sistema_bibliotecario.domain.Leitor;
-import edu.ifes.sistema_bibliotecario.domain.TipoPessoa;
+import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorFiltrosDTO;
 import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorMapper;
 import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorRequestDTO;
 import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorResponseDTO;
@@ -37,8 +37,8 @@ public class LeitorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LeitorResponseDTO>> findAll(@RequestParam(required = false) TipoPessoa tipo) {
-        List<LeitorResponseDTO> leitores = this.leitorService.findAll(tipo).stream()
+    public ResponseEntity<List<LeitorResponseDTO>> findByFiltros(LeitorFiltrosDTO filtros) {
+        List<LeitorResponseDTO> leitores = this.leitorService.findByFiltros(filtros).stream()
                 .map(this.leitorMapper::toResponse)
                 .toList();
         return ResponseEntity.ok(leitores);

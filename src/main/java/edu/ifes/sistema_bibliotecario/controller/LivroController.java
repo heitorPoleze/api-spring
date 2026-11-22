@@ -37,8 +37,8 @@ public class LivroController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LivroResponseDTO>> findByFilters(LivroFiltrosDTO filtros) {
-        List<LivroResponseDTO> livros = this.livroService.findByFilters(filtros).stream()
+    public ResponseEntity<List<LivroResponseDTO>> findByFiltros(LivroFiltrosDTO filtros) {
+        List<LivroResponseDTO> livros = this.livroService.findByFiltros(filtros).stream()
                 .map(this.livroMapper::toResponse)
                 .toList();
         return ResponseEntity.ok(livros);

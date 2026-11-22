@@ -29,8 +29,8 @@ public class LivroService {
         return this.livroRepository.save(this.livroMapper.toDomain(dto));
     }
 
-    public List<Livro> findByFilters(LivroFiltrosDTO filtros){
-        return this.livroRepository.findByFiltro(filtros);
+    public List<Livro> findByFiltros(LivroFiltrosDTO filtros){
+        return this.livroRepository.findAll(filtros.toEspecificacao());
     }
 
     public Livro findById(long id){
