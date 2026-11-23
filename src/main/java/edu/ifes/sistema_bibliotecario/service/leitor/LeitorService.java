@@ -7,7 +7,7 @@ import edu.ifes.sistema_bibliotecario.dto.leitor.LeitorRequestDTO;
 import edu.ifes.sistema_bibliotecario.exception.NaoEncontradoException;
 import edu.ifes.sistema_bibliotecario.exception.RegraDeNegocioVioladaException;
 import edu.ifes.sistema_bibliotecario.repository.leitor.LeitorRepository;
-import edu.ifes.sistema_bibliotecario.service.emprestimo.EmprestimoService;
+import edu.ifes.sistema_bibliotecario.service.emprestimo.EmprestimoConsultaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class LeitorService {
     private final LeitorRepository leitorRepository;
     private final LeitorMapper leitorMapper;
-    private final EmprestimoService emprestimoService;
+    private final EmprestimoConsultaService emprestimoConsultaService;
 
     public Leitor save(LeitorRequestDTO dto) {
         this.leitorRepository.findByEmail(dto.email())
@@ -56,7 +56,7 @@ public class LeitorService {
     }
 
     public void deleteById(long id){
-        if(this.emprestimoService.isLeitorComEmprestimoAtivo(id)) throw new RegraDeNegocioVioladaException("Leitor não pode ser excluído pois está com empréstimos ativos.");
+        if(this.emprestimoConsultaService.isLeitorComEmprestimoAtivo(id)) throw new RegraDeNegocioVioladaException("Leitor não pode ser excluído pois está com empréstimos ativos.");
         boolean deletado = this.leitorRepository.deleteById(id);
         if(!deletado){
             throw new NaoEncontradoException("Leitor não encontrado");

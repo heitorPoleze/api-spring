@@ -7,7 +7,7 @@ import edu.ifes.sistema_bibliotecario.dto.livro.LivroRequestDTO;
 import edu.ifes.sistema_bibliotecario.exception.NaoEncontradoException;
 import edu.ifes.sistema_bibliotecario.exception.RegraDeNegocioVioladaException;
 import edu.ifes.sistema_bibliotecario.repository.livro.LivroRepository;
-import edu.ifes.sistema_bibliotecario.service.emprestimo.EmprestimoService;
+import edu.ifes.sistema_bibliotecario.service.emprestimo.EmprestimoConsultaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class LivroService {
     private final LivroRepository livroRepository;
     private final LivroMapper livroMapper;
-    private final EmprestimoService emprestimoService;
+    private final EmprestimoConsultaService emprestimoConsultaService;
 
     public Livro save(LivroRequestDTO dto){
         this.livroRepository.findByIsbn(dto.isbn())
@@ -68,7 +68,7 @@ public class LivroService {
     }
 
     public void deleteById(long id){
-        if(this.emprestimoService.isLivroEmprestado(id)) throw new RegraDeNegocioVioladaException("Livro está com empréstimos ativos e não pode ser excluído");
+        if(this.emprestimoConsultaService.isLivroEmprestado(id)) throw new RegraDeNegocioVioladaException("Livro está com empréstimos ativos e não pode ser excluído");
         boolean deletado = this.livroRepository.deleteById(id);
         if(!deletado){
             throw new NaoEncontradoException("Livro não encontrado");

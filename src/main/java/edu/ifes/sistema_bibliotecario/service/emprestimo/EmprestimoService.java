@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Clock;
+import edu.ifes.sistema_bibliotecario.config.clock.ClockConfig;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,13 +30,13 @@ public class EmprestimoService {
     private final LivroService livroService;
     private final LeitorService leitorService;
     private final RegraEmprestimoResolver regraEmprestimoResolver;
-    private final Clock clock;
+    private final ClockConfig clockConfig;
 
     public EmprestimoResponseDTO save(EmprestimoRequestDTO dto){
         Leitor leitor = this.leitorService.findById(dto.leitorId());
         RegraEmprestimoStrategy regra = this.regraEmprestimoResolver.para(leitor.getTipoPessoa());
 
-        LocalDate hoje = getDataDeHoje();
+        LocalDate hoje = this.clockConfig.getDataAtual();
         List<Emprestimo> listaEmprestimosAtrasadosLeitor = emprestimoRepository.findAtrasadosByLeitorId(leitor.getId(), hoje);
         if(!listaEmprestimosAtrasadosLeitor.isEmpty()){
             throw new RegraDeNegocioVioladaException("Leitor não pode ter mais um empréstimo, pois tem livros atrasados.");
@@ -74,7 +74,7 @@ public class EmprestimoService {
     }
 
     public List<EmprestimoResponseDTO> buscarAtrasados(){
-        LocalDate hoje = getDataDeHoje();
+        LocalDate hoje = this.clockConfig.getDataAtual();
         List<Emprestimo> atrasados = this.emprestimoRepository.findAtrasadosAPartirDe(hoje);
         return atrasados.stream()
                 .map(emprestimo -> mapLivroELeitorPorEmprestimo(emprestimo, null, null))
@@ -82,7 +82,7 @@ public class EmprestimoService {
     }
 
     public EmprestimoResponseDTO devolver(long id){
-        LocalDate hoje = getDataDeHoje();
+        LocalDate hoje = this.clockConfig.getDataAtual();
 
         Emprestimo emprestimo = this.emprestimoRepository.findById(id)
                 .orElseThrow(() -> new NaoEncontradoException("Empréstimo não encontrado."));
@@ -100,18 +100,6 @@ public class EmprestimoService {
         Livro livro = this.livroService.findById(emprestimo.getLivroId());
         this.livroService.aumentarQtdDisponivel(livro);
         return mapLivroELeitorPorEmprestimo(emprestimo, null, leitorQueEmprestou);
-    }
-
-    public boolean isLivroEmprestado(long idLivro){
-        return !this.emprestimoRepository.findAtivosByLivroId(idLivro).isEmpty();
-    }
-
-    public boolean isLeitorComEmprestimoAtivo(long idLeitor){
-        return !this.emprestimoRepository.findAtivosByLeitorId(idLeitor).isEmpty();
-    }
-
-    private LocalDate getDataDeHoje(){
-        return LocalDate.now(this.clock);
     }
 
     private EmprestimoResponseDTO mapLivroELeitorPorEmprestimo(Emprestimo emprestimo, Livro livro, Leitor leitor){

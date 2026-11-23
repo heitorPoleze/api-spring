@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 
 @Configuration
@@ -12,6 +13,10 @@ public class ClockConfig {
     @Bean
     public Clock clock(){
         return Clock.systemDefaultZone();
+    }
+
+    public LocalDate getDataAtual(){
+        return LocalDate.now(clock());
     }
 
     public static Clock clockFixo() {
